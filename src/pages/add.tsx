@@ -1,9 +1,9 @@
 import Error from "next/error";
 import Head from "next/head";
 import Link from "next/link";
-import PostForm from "../components/PostForm";
-import Layout from "../components/Layout";
-import useFetchUser from "../hooks/useFetchUser";
+import PostForm from "components/PostForm";
+import Layout from "components/Layout";
+import useFetchUser from "hooks/useFetchUser";
 
 const Add = () => {
 	const { user, loading } = useFetchUser({ required: true });

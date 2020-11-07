@@ -1,9 +1,9 @@
 import { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
 import { CurriculumGetPayload, PrismaClient } from "@prisma/client";
 import Head from "next/head";
-import useFetchUser from "../hooks/useFetchUser";
-import Layout from "../components/Layout";
-import { CurriculumProps } from "../interfaces";
+import useFetchUser from "hooks/useFetchUser";
+import Layout from "components/Layout";
+import { CurriculumProps } from "interfaces";
 
 const Curriculums: NextPage<CurriculumProps> = ({
 	curriculums,
