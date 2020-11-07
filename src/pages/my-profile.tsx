@@ -4,7 +4,6 @@ import Error from "next/error";
 import Head from "next/head";
 import Link from "next/link";
 import { PrismaClient } from "@prisma/client";
-import ProfileForm from "components/ProfileForm";
 import Layout from "components/Layout";
 import useFetchUser from "hooks/useFetchUser";
 import auth0 from "utils/auth0";
