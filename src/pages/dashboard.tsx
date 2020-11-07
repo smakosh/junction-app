@@ -1,20 +1,20 @@
-import { NextPage, InferGetStaticPropsType, GetServerSideProps } from "next";
-import Link from "next/link";
+import { GetServerSideProps } from "next";
 import { CurriculumGetPayload, PrismaClient } from "@prisma/client";
 import Head from "next/head";
 import useFetchUser from "hooks/useFetchUser";
 import Layout from "components/Layout";
-import { CurriculumProps } from "interfaces";
 
-const Dashboard: NextPage<CurriculumProps> = ({
+const Dashboard = ({
 	curriculums,
-}: InferGetStaticPropsType<typeof getServerSideProps>) => {
+}: {
+	curriculums: CurriculumGetPayload<{ include: { teacher: true } }>[];
+}) => {
 	const { user, loading } = useFetchUser();
 
 	return (
 		<Layout user={user} loading={loading}>
 			<Head>
-				<title>Dashboard</title>
+				<title>Welcome to StudenCuri</title>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<div
@@ -24,43 +24,34 @@ const Dashboard: NextPage<CurriculumProps> = ({
 				}}
 			>
 				{curriculums.length > 0 ? (
-					curriculums.map(
-						({
-							id,
-							title,
-							content,
-							teacher,
-						}: CurriculumGetPayload<{ include: { teacher: true } }>) => (
-							<ul key={id}>
+					curriculums.map(({ id, title, content, teacher }) => (
+						<ul key={id}>
+							<li>
+								<h1>{title}</h1>
+								<span
+									key={id}
+									style={{
+										background: "cyan",
+										padding: ".2rem .5rem",
+										display: "inline-block",
+										marginBottom: 20,
+										marginRight: 20,
+									}}
+								>
+									{teacher?.name}
+								</span>
+							</li>
+							{content && (
 								<li>
-									<h1>{title}</h1>
-									<span
-										key={id}
-										style={{
-											background: "cyan",
-											padding: ".2rem .5rem",
-											display: "inline-block",
-											marginBottom: 20,
-											marginRight: 20,
-										}}
-									>
-										{teacher?.name}
-									</span>
+									<div dangerouslySetInnerHTML={{ __html: content }} />
 								</li>
-								{content && (
-									<li>
-										<div dangerouslySetInnerHTML={{ __html: content }} />
-									</li>
-								)}
-							</ul>
-						)
-					)
+							)}
+						</ul>
+					))
 				) : (
 					<h2>No curriculums at the moment.</h2>
 				)}
-				<Link href="/">
-					<a>View details</a>
-				</Link>
+				<a href="/api/auth/login">Sign up</a>
 			</div>
 		</Layout>
 	);
