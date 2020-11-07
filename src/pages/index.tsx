@@ -5,10 +5,11 @@ import useFetchUser from "hooks/useFetchUser";
 import Layout from "components/Layout";
 import { CurriculumProps } from "interfaces";
 
+// Welcome
 const Curriculums: NextPage<CurriculumProps> = ({
 	curriculums,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-	const { user, loading } = useFetchUser();
+	const { user, loading } = useFetchUser({ required: true });
 
 	return (
 		<Layout user={user} loading={loading}>
@@ -22,41 +23,7 @@ const Curriculums: NextPage<CurriculumProps> = ({
 					margin: "0 auto",
 				}}
 			>
-				{curriculums.length > 0 ? (
-					curriculums.map(
-						({
-							id,
-							title,
-							content,
-							teacher,
-						}: CurriculumGetPayload<{ include: { teacher: true } }>) => (
-							<ul key={id}>
-								<li>
-									<h1>{title}</h1>
-									<span
-										key={id}
-										style={{
-											background: "cyan",
-											padding: ".2rem .5rem",
-											display: "inline-block",
-											marginBottom: 20,
-											marginRight: 20,
-										}}
-									>
-										{teacher?.name}
-									</span>
-								</li>
-								{content && (
-									<li>
-										<div dangerouslySetInnerHTML={{ __html: content }} />
-									</li>
-								)}
-							</ul>
-						)
-					)
-				) : (
-					<h2>No curriculums at the moment.</h2>
-				)}
+				<h2> Welcome to StudenCuri. Sign up now!</h2>
 				<a href="/api/auth/login">Sign up</a>
 			</div>
 		</Layout>

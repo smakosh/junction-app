@@ -3,8 +3,16 @@ import Link from "next/link";
 import { CurriculumGetPayload, PrismaClient } from "@prisma/client";
 import Head from "next/head";
 import useFetchUser from "hooks/useFetchUser";
-import Layout from "components/Layout";
+import Board from "components/Board";
+import MainMessage from "components/MainMessage";
+import Habits from "components/Habits";
+import FeelingTracker from "components/FeelingTracker";
+import Projects from "components/Projects";
+import Schedule from "components/Schedule";
+import Menu from "components/Menu";
 import { CurriculumProps } from "interfaces";
+import React from "react";
+import { Flex, Item } from 'react-flex-ready'
 
 const Dashboard: NextPage<CurriculumProps> = ({
 	curriculums,
@@ -12,57 +20,29 @@ const Dashboard: NextPage<CurriculumProps> = ({
 	const { user, loading } = useFetchUser();
 
 	return (
-		<Layout user={user} loading={loading}>
-			<Head>
-				<title>Dashboard</title>
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
-			<div
-				style={{
-					maxWidth: 960,
-					margin: "0 auto",
-				}}
-			>
-				{curriculums.length > 0 ? (
-					curriculums.map(
-						({
-							id,
-							title,
-							content,
-							teacher,
-						}: CurriculumGetPayload<{ include: { teacher: true } }>) => (
-							<ul key={id}>
-								<li>
-									<h1>{title}</h1>
-									<span
-										key={id}
-										style={{
-											background: "cyan",
-											padding: ".2rem .5rem",
-											display: "inline-block",
-											marginBottom: 20,
-											marginRight: 20,
-										}}
-									>
-										{teacher?.name}
-									</span>
-								</li>
-								{content && (
-									<li>
-										<div dangerouslySetInnerHTML={{ __html: content }} />
-									</li>
-								)}
-							</ul>
-						)
-					)
-				) : (
-					<h2>No curriculums at the moment.</h2>
-				)}
-				<Link href="/">
-					<a>View details</a>
-				</Link>
-			</div>
-		</Layout>
+		<Board user={user} loading={loading}>
+			<Menu />
+
+			<Flex>
+				<Item col={12} >
+					<MainMessage />
+				</Item>
+				<Item col={6} colTablet={6} colMobile={12} gap={2} style={{ alignSelf: 'flex-start' }}>
+					<Habits />
+					<Projects />
+				</Item>
+				<Item col={6} colTablet={6} colMobile={12} style={{ alignSelf: 'flex-start' }}>
+					<FeelingTracker />
+				</Item>
+			</Flex>
+
+			<Flex>
+				<Item col={12} colTablet={6} colMobile={12} gap={1}>
+					<Schedule />
+				</Item>
+			</Flex>
+
+		</Board >
 	);
 };
 
