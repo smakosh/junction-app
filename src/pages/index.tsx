@@ -1,13 +1,14 @@
-import { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
+import { GetStaticProps } from "next";
 import { CurriculumGetPayload, PrismaClient } from "@prisma/client";
 import Head from "next/head";
 import useFetchUser from "hooks/useFetchUser";
 import Layout from "components/Layout";
-import { CurriculumProps } from "interfaces";
 
-const Curriculums: NextPage<CurriculumProps> = ({
+const Curriculums = ({
 	curriculums,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+}: {
+	curriculums: CurriculumGetPayload<{ include: { teacher: true } }>[];
+}) => {
 	const { user, loading } = useFetchUser();
 
 	return (
@@ -23,37 +24,30 @@ const Curriculums: NextPage<CurriculumProps> = ({
 				}}
 			>
 				{curriculums.length > 0 ? (
-					curriculums.map(
-						({
-							id,
-							title,
-							content,
-							teacher,
-						}: CurriculumGetPayload<{ include: { teacher: true } }>) => (
-							<ul key={id}>
+					curriculums.map(({ id, title, content, teacher }) => (
+						<ul key={id}>
+							<li>
+								<h1>{title}</h1>
+								<span
+									key={id}
+									style={{
+										background: "cyan",
+										padding: ".2rem .5rem",
+										display: "inline-block",
+										marginBottom: 20,
+										marginRight: 20,
+									}}
+								>
+									{teacher?.name}
+								</span>
+							</li>
+							{content && (
 								<li>
-									<h1>{title}</h1>
-									<span
-										key={id}
-										style={{
-											background: "cyan",
-											padding: ".2rem .5rem",
-											display: "inline-block",
-											marginBottom: 20,
-											marginRight: 20,
-										}}
-									>
-										{teacher?.name}
-									</span>
+									<div dangerouslySetInnerHTML={{ __html: content }} />
 								</li>
-								{content && (
-									<li>
-										<div dangerouslySetInnerHTML={{ __html: content }} />
-									</li>
-								)}
-							</ul>
-						)
-					)
+							)}
+						</ul>
+					))
 				) : (
 					<h2>No curriculums at the moment.</h2>
 				)}
