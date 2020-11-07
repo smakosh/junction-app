@@ -3,6 +3,7 @@ import Router from "next/router";
 import NProgress from "nprogress";
 import GlobalStyle from "theme/global-style";
 import "nprogress/nprogress.css";
+import UserProvider from "providers/UserProvider";
 // import { ThemeProvider } from "styled-components";
 // import theme from "theme/config";
 
@@ -15,7 +16,9 @@ Router.events.on("routeChangeError", () => NProgress.done());
 const MyApp = ({ Component, pageProps }: AppProps) => (
 	<>
 		<GlobalStyle />
-		<Component {...pageProps} />
+		<UserProvider>
+			<Component {...pageProps} />
+		</UserProvider>
 	</>
 );
 

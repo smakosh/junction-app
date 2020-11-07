@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { GetStaticProps } from "next";
 import { CurriculumGetPayload, PrismaClient } from "@prisma/client";
 import Head from "next/head";
@@ -10,6 +12,13 @@ const Curriculums = ({
 	curriculums: CurriculumGetPayload<{ include: { teacher: true } }>[];
 }) => {
 	const { user, loading } = useFetchUser();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (!loading && user) {
+			router.push("/dashboard");
+		}
+	}, [loading, user]);
 
 	return (
 		<Layout user={user} loading={loading}>
