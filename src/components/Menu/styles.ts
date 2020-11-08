@@ -28,10 +28,13 @@ export const Container = styled.nav`
         li {
             width: 200px;
             padding-left: 40px !important;
+            padding: 15px 0;
+        }
+
+        li, a {
             color: #005EB8;
             font-weight: bold;
             list-style-type: none;
-            padding: 15px 0;
         }
     }
 

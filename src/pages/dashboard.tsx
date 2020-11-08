@@ -1,5 +1,5 @@
 import auth0 from "utils/auth0";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import Head from "next/head";
@@ -17,6 +17,7 @@ import { useUser } from "providers/UserProvider";
 import { UserState } from "interfaces";
 
 const Dashboard = ({ user: currentUser }: { user: UserState[] }) => {
+	const [customLoading, setloading] = useState(true);
 	const { user, loading } = useFetchUser({ required: true });
 	const { state, dispatch } = useUser();
 
@@ -25,14 +26,15 @@ const Dashboard = ({ user: currentUser }: { user: UserState[] }) => {
 			type: "SAVE_USER",
 			payload: {
 				...currentUser[0],
-				avatar: !loading && user?.picture ? user?.picture : "",
+				avatar: user?.picture || "",
 			},
 		});
+		setloading(false);
 	}, [currentUser]);
 
 	return (
 		<>
-			{loading && !state.avatar ? (
+			{loading || customLoading ? (
 				<span>Loading...</span>
 			) : user ? (
 				<div
@@ -45,10 +47,10 @@ const Dashboard = ({ user: currentUser }: { user: UserState[] }) => {
 						<title>Welcome to StudenCuri</title>
 						<link rel="icon" href="/favicon.ico" />
 					</Head>
-					<Menu state={state} />
+					<Menu state={state || currentUser[0]} user={user} />
 					<Flex>
 						<Item col={12}>
-							<MainMessage />
+							<MainMessage name={state.name || user.nickname} />
 						</Item>
 						<Item
 							col={6}
