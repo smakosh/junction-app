@@ -14,6 +14,7 @@ import { Flex, Item } from "react-flex-ready";
 import Error from "next/error";
 import { useUser } from "providers/UserProvider";
 import { UserState } from "interfaces";
+import { motion } from "framer-motion";
 
 const Dashboard = ({
 	user: currentUser,
@@ -22,7 +23,7 @@ const Dashboard = ({
 	user: UserState[];
 	avatar: string;
 }) => {
-	const [customLoading, setloading] = useState(true);
+	const [loading, setloading] = useState(true);
 	const { dispatch } = useUser();
 
 	useEffect(() => {
@@ -35,10 +36,28 @@ const Dashboard = ({
 
 	return (
 		<>
-			{customLoading ? (
+			{loading ? (
 				<span>Loading...</span>
 			) : currentUser[0] ? (
-				<div
+				<motion.div
+					initial="initial"
+					animate="enter"
+					exit="exit"
+					variants={{
+						initial: { scale: 0.96, y: 30, opacity: 0 },
+						enter: {
+							scale: 1,
+							y: 0,
+							opacity: 1,
+							transition: { duration: 0.5, ease: [0.48, 0.15, 0.25, 0.96] },
+						},
+						exit: {
+							scale: 0.6,
+							y: 100,
+							opacity: 0,
+							transition: { duration: 0.2, ease: [0.48, 0.15, 0.25, 0.96] },
+						},
+					}}
 					style={{
 						display: "flex",
 						alignItems: "start",
@@ -48,7 +67,7 @@ const Dashboard = ({
 						<title>Welcome to StudenCuri</title>
 						<link rel="icon" href="/favicon.ico" />
 					</Head>
-					<Menu user={{ ...currentUser[0], avatar }} />
+					<Menu title="Dashboard" user={{ ...currentUser[0], avatar }} />
 					<Flex>
 						<Item col={12}>
 							<MainMessage name={currentUser[0].name} />
@@ -78,7 +97,7 @@ const Dashboard = ({
 							<Schedule />
 						</Item>
 					</Flex>
-				</div>
+				</motion.div>
 			) : (
 				<Error statusCode={404} />
 			)}

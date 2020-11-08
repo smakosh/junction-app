@@ -1,25 +1,58 @@
 import Link from "next/link";
 import React from "react";
 import { FiLogOut, FiSettings } from "react-icons/fi";
+import { motion } from "framer-motion";
 import { UserState } from "interfaces";
-import { Container, MenuFooter, Avatar } from "./styles";
+import { Container, MenuFooter, Avatar, List } from "./styles";
 
-const Menu = ({ user }: { user: UserState }) => (
+const Menu = ({ user, title }: { user: UserState; title?: string }) => (
 	<Container>
 		<div>
 			<Avatar src={user.avatar} alt="Avatar" width={150} height={150} />
 			<p>{user.name}</p>
 		</div>
 		<ul>
-			<li>Dashboard</li>
-			<li>
-				<Link href={user.name ? "/my-profile" : "/profile"}>
-					<a>{user.name ? "Profile" : "Setup your profile"}</a>
+			<List current={title === "Dashboard"}>
+				<Link href="/dashboard">
+					<motion.a
+						animate={{ scale: 1 }}
+						whileHover={{
+							scale: 1.1,
+						}}
+						layoutId="Dashboard"
+					>
+						Dashboard
+					</motion.a>
 				</Link>
-			</li>
-			<li>Notifications</li>
-			<li>My calendar</li>
-			<li>Wellness Hub</li>
+			</List>
+			<List current={title === "Profile"}>
+				<Link href={user.name ? "/my-profile" : "/profile"}>
+					<motion.a
+						animate={{ scale: 1 }}
+						whileHover={{
+							scale: 1.1,
+						}}
+						layoutId="Profile"
+					>
+						{user.name ? "Profile" : "Setup your profile"}
+					</motion.a>
+				</Link>
+			</List>
+			<List current={title === "Notifications"}>Notifications</List>
+			<List current={title === "My calendar"}>My calendar</List>
+			<List current={title === "Wellness Hub"}>
+				<Link href="/wellnesshub">
+					<motion.a
+						animate={{ scale: 1 }}
+						whileHover={{
+							scale: 1.1,
+						}}
+						layoutId="Wellness Hub"
+					>
+						Wellness Hub
+					</motion.a>
+				</Link>
+			</List>
 		</ul>
 		<MenuFooter>
 			<a href="/api/auth/logout">

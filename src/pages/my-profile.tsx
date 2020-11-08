@@ -1,20 +1,26 @@
+import auth0 from "utils/auth0";
 import { useEffect, useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
-import Error from "next/error";
-import Head from "next/head";
-import Link from "next/link";
 import { PrismaClient } from "@prisma/client";
-import Layout from "components/Layout";
-import auth0 from "utils/auth0";
+import Head from "next/head";
+import MainMessage from "components/MainMessage";
+import Habits from "components/Habits";
+import FeelingTracker from "components/FeelingTracker";
+import Projects from "components/Projects";
+import Schedule from "components/Schedule";
+import Menu from "components/Menu";
+import React from "react";
+import { Flex, Item } from "react-flex-ready";
+import Error from "next/error";
 import { useUser } from "providers/UserProvider";
 import { UserState } from "interfaces";
 
-const MyProfilePage = ({
+const MyProfile = ({
 	user: currentUser,
 	avatar,
 }: {
-	user: UserState[] | { [key: string]: string } | null;
-	avatar?: string;
+	user: UserState[];
+	avatar: string;
 }) => {
 	const [loading, setloading] = useState(true);
 	const { dispatch } = useUser();
@@ -22,38 +28,55 @@ const MyProfilePage = ({
 	useEffect(() => {
 		dispatch({
 			type: "SAVE_USER",
-			payload: { ...currentUser?.[0], avatar },
+			payload: { ...currentUser[0], avatar },
 		});
 		setloading(false);
 	}, [currentUser]);
 
 	return (
-		<Layout user={currentUser?.[0]} loading={loading}>
-			<Head>
-				<title>Edit account</title>
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
-			{!loading &&
-				(currentUser?.[0] ? (
-					<div
-						style={{
-							maxWidth: 960,
-							margin: "0 auto",
-							padding: "5rem 0",
-						}}
-					>
-						<div>
-							<img src={avatar} alt={currentUser[0].name} />
-						</div>
-						<h1>{currentUser[0].name}</h1>
-						<Link href="/dashboard">
-							<a>Back to Dashboard</a>
-						</Link>
-					</div>
-				) : (
-					<Error statusCode={404} />
-				))}
-		</Layout>
+		<>
+			{loading ? (
+				<span>Loading...</span>
+			) : currentUser[0] ? (
+				<div
+					style={{
+						display: "flex",
+						alignItems: "start",
+					}}
+				>
+					<Head>
+						<title>Welcome to StudenCuri</title>
+						<link rel="icon" href="/favicon.ico" />
+					</Head>
+					<Menu title="Profile" user={{ ...currentUser[0], avatar }} />
+					<Flex>
+						<Item col={12}>
+							<MainMessage name={currentUser[0].name} />
+						</Item>
+						<Item
+							col={6}
+							colTablet={6}
+							colMobile={12}
+							gap={2}
+							style={{ alignSelf: "flex-start" }}
+						>
+							<Habits />
+							<Projects />
+						</Item>
+						<Item
+							col={6}
+							colTablet={6}
+							colMobile={12}
+							style={{ alignSelf: "flex-start" }}
+						>
+							<FeelingTracker />
+						</Item>
+					</Flex>
+				</div>
+			) : (
+				<Error statusCode={404} />
+			)}
+		</>
 	);
 };
 
@@ -87,6 +110,7 @@ export const getServerSideProps = async ({
 			},
 		});
 		userType = "teacher";
+
 		return {
 			props: {
 				user: teacher,
@@ -124,4 +148,4 @@ export const getServerSideProps = async ({
 	}
 };
 
-export default MyProfilePage;
+export default MyProfile;

@@ -1,40 +1,42 @@
 import auth0 from "utils/auth0";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
+import { Flex, Item } from "react-flex-ready";
+import Error from "next/error";
 import { PrismaClient } from "@prisma/client";
 import Head from "next/head";
-import useFetchUser from "hooks/useFetchUser";
 import HeaderUser from "components/HeaderUser";
 import DonutHealthy from "components/DonutHealthy";
 import AddDonutHealthy from "components/DonutHealthy/addNew";
 import LineChart from "components/LineChart";
 import BlockMessage from "components/BlockMessage";
 import Menu from "components/Menu";
-import React from "react";
-import { Flex, Item } from "react-flex-ready";
-import Error from "next/error";
 import { useUser } from "providers/UserProvider";
 import { UserState } from "interfaces";
 
-const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
-	const { user, loading } = useFetchUser({ required: true });
-	const { state, dispatch } = useUser();
+const Wellnesshub = ({
+	user: currentUser,
+	avatar,
+}: {
+	user: UserState[];
+	avatar: string;
+}) => {
+	const [loading, setloading] = useState(true);
+	const { dispatch } = useUser();
 
 	useEffect(() => {
 		dispatch({
 			type: "SAVE_USER",
-			payload: {
-				...currentUser[0],
-				avatar: !loading && user?.picture ? user?.picture : "",
-			},
+			payload: { ...currentUser[0], avatar },
 		});
+		setloading(false);
 	}, [currentUser]);
 
 	return (
 		<>
-			{loading && !state.avatar ? (
+			{loading ? (
 				<span>Loading...</span>
-			) : user ? (
+			) : currentUser[0] ? (
 				<div
 					style={{
 						display: "flex",
@@ -45,7 +47,7 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 						<title>Welcome to StudenCuri</title>
 						<link rel="icon" href="/favicon.ico" />
 					</Head>
-					<Menu state={state} />
+					<Menu title="Wellness Hub" user={{ ...currentUser[0], avatar }} />
 					<Flex>
 						<Item col={12}>
 							<HeaderUser />
@@ -76,7 +78,11 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 									gap={2}
 									style={{ alignSelf: "flex-start" }}
 								>
-									<DonutHealthy title="Drinking water" goal={100} measure="litters" />
+									<DonutHealthy
+										title="Drinking water"
+										goal={100}
+										measure="litters"
+									/>
 								</Item>
 								<Item
 									col={3}
@@ -103,8 +109,15 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 									gap={2}
 									style={{ alignSelf: "flex-start" }}
 								>
-									<BlockMessage background={true} texts={["Wellness tips of the week", "When looking at the results of your mood tracker, reflect back on the days when you were doing really well.", "What made you feel that way?", "Include those things in your routine more often."]} />
-
+									<BlockMessage
+										background={true}
+										texts={[
+											"Wellness tips of the week",
+											"When looking at the results of your mood tracker, reflect back on the days when you were doing really well.",
+											"What made you feel that way?",
+											"Include those things in your routine more often.",
+										]}
+									/>
 								</Item>
 								<Item
 									col={12}
@@ -113,7 +126,13 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 									gap={2}
 									style={{ alignSelf: "flex-start" }}
 								>
-									<BlockMessage background={false} texts={["Connect your Oura ring for more detailed data", "The Oura ring or other fitness trackers can help you track your sleep and activity in more detail here."]} />
+									<BlockMessage
+										background={false}
+										texts={[
+											"Connect your Oura ring for more detailed data",
+											"The Oura ring or other fitness trackers can help you track your sleep and activity in more detail here.",
+										]}
+									/>
 								</Item>
 							</Flex>
 						</Item>
@@ -126,14 +145,11 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 						>
 							<LineChart />
 						</Item>
-
 					</Flex>
-
-
 				</div>
 			) : (
-						<Error statusCode={404} />
-					)}
+				<Error statusCode={404} />
+			)}
 		</>
 	);
 };
@@ -158,12 +174,6 @@ export const getServerSideProps = async ({
 	const prisma = new PrismaClient();
 	let userType;
 
-	if (!session.user) {
-		return {
-			props: { user: {} },
-		};
-	}
-
 	// I know this isn't how it should be done, but for the sake of speed and delivery.
 
 	try {
@@ -174,9 +184,11 @@ export const getServerSideProps = async ({
 			},
 		});
 		userType = "teacher";
+
 		return {
 			props: {
 				user: teacher,
+				avatar: session.user.picture,
 			},
 		};
 	} catch (error) {
@@ -195,6 +207,7 @@ export const getServerSideProps = async ({
 		return {
 			props: {
 				user: student,
+				avatar: session.user.picture,
 			},
 		};
 	} catch (error) {
@@ -204,7 +217,7 @@ export const getServerSideProps = async ({
 
 	if (userType !== "teacher" || userType !== "teacher") {
 		return {
-			props: { user: {} },
+			props: { user: session.user },
 		};
 	}
 };
