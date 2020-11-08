@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-// import { shade } from 'polished';
 
 
 export const Container = styled.nav`
@@ -7,10 +6,8 @@ export const Container = styled.nav`
     padding: 10px 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     width: 250px;
     margin: 20px 0;
-    height: 100vh;
     align-items:center;
 
     p {
@@ -20,6 +17,7 @@ export const Container = styled.nav`
     ul { 
         align-self: start;
         padding: 0;
+        margin-bottom: 15rem;
     
         li:first-child {
             background: #fff;

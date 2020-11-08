@@ -7,20 +7,22 @@ import { useUser } from "providers/UserProvider";
 import { useRouter } from "next/router";
 
 const ProfileForm = ({ user }: ProfileProps) => {
-	const { state, dispatch } = useUser();
+	const { dispatch } = useUser();
 	const router = useRouter();
 
 	useEffect(() => {
-		if (state?.name) {
+		if (user?.name) {
 			router.push("/dashboard");
 		}
-	}, [state]);
+	}, [user]);
+
+	console.log(user);
 
 	return (
 		<Formik
 			initialValues={{
 				type: true,
-				name: user.nickname,
+				name: user.name || user.nickname,
 			}}
 			validationSchema={Yup.object().shape({
 				name: Yup.string().required(),
