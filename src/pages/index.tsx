@@ -1,15 +1,24 @@
-import { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { GetStaticProps } from "next";
 import { CurriculumGetPayload, PrismaClient } from "@prisma/client";
 import Head from "next/head";
 import useFetchUser from "hooks/useFetchUser";
 import Layout from "components/Layout";
-import { CurriculumProps } from "interfaces";
 
-// Welcome
-const Curriculums: NextPage<CurriculumProps> = ({
+const Curriculums = ({
 	curriculums,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
-	const { user, loading } = useFetchUser({ required: true });
+}: {
+	curriculums: CurriculumGetPayload<{ include: { teacher: true } }>[];
+}) => {
+	const { user, loading } = useFetchUser();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (!loading && user) {
+			router.push("/dashboard");
+		}
+	}, [loading, user]);
 
 	return (
 		<Layout user={user} loading={loading}>
@@ -23,7 +32,34 @@ const Curriculums: NextPage<CurriculumProps> = ({
 					margin: "0 auto",
 				}}
 			>
-				<h2> Welcome to StudenCuri. Sign up now!</h2>
+				{curriculums.length > 0 ? (
+					curriculums.map(({ id, title, content, teacher }) => (
+						<ul key={id}>
+							<li>
+								<h1>{title}</h1>
+								<span
+									key={id}
+									style={{
+										background: "cyan",
+										padding: ".2rem .5rem",
+										display: "inline-block",
+										marginBottom: 20,
+										marginRight: 20,
+									}}
+								>
+									{teacher?.name}
+								</span>
+							</li>
+							{content && (
+								<li>
+									<div dangerouslySetInnerHTML={{ __html: content }} />
+								</li>
+							)}
+						</ul>
+					))
+				) : (
+					<h2>No curriculums at the moment.</h2>
+				)}
 				<a href="/api/auth/login">Sign up</a>
 			</div>
 		</Layout>

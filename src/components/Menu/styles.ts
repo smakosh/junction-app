@@ -7,13 +7,12 @@ export const Container = styled.nav`
     padding: 10px 0;
     display: flex;
     flex-direction: column;
-    
     justify-content: space-between;
     width: 250px;
     margin: 20px 0;
     height: 100vh;
-
     align-items:center;
+
     p {
         font-weight: bold;
     }
@@ -35,10 +34,13 @@ export const Container = styled.nav`
             padding: 15px 0;
         }
     }
+
     div { 
-       display: flex;
+        display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
+        text-align: center;
 
         div img {
             width: 100px;
@@ -52,7 +54,8 @@ export const Container = styled.nav`
 `
 
 export const MenuFooter = styled.div`
-    width: 230px;  
+    width: 230px;
+
     a {
         color: #000000;
         padding: 10px 40px;
@@ -61,3 +64,7 @@ export const MenuFooter = styled.div`
         }
     }
 `;
+
+export const Avatar = styled.img`
+    border-radius: 50%;
+`

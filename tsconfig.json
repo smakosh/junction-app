@@ -18,15 +18,14 @@
     "strict": true,
     "target": "esnext",
     "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "typeRoots": ["./types", "./node_modules/@types"],
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
   ],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["next-env.d.ts", "./src/**/*.ts", "./src/**/*.tsx"],
 }

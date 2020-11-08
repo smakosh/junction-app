@@ -9,6 +9,7 @@ datasource db {
 
 model Teacher {
   id          Int          @id @default(autoincrement())
+  userId      String
   email       String       @unique
   name        String
   curriculums Curriculum[]
@@ -16,6 +17,7 @@ model Teacher {
 
 model Student {
   id          Int          @id @default(autoincrement())
+  userId      String
   email       String       @unique
   name        String
   curriculums Curriculum[]
