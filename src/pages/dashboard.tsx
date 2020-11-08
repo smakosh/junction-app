@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import Head from "next/head";
-import useFetchUser from "hooks/useFetchUser";
 import MainMessage from "components/MainMessage";
 import Habits from "components/Habits";
 import FeelingTracker from "components/FeelingTracker";
@@ -16,27 +15,29 @@ import Error from "next/error";
 import { useUser } from "providers/UserProvider";
 import { UserState } from "interfaces";
 
-const Dashboard = ({ user: currentUser }: { user: UserState[] }) => {
+const Dashboard = ({
+	user: currentUser,
+	avatar,
+}: {
+	user: UserState[];
+	avatar: string;
+}) => {
 	const [customLoading, setloading] = useState(true);
-	const { user, loading } = useFetchUser({ required: true });
-	const { state, dispatch } = useUser();
+	const { dispatch } = useUser();
 
 	useEffect(() => {
 		dispatch({
 			type: "SAVE_USER",
-			payload: {
-				...currentUser[0],
-				avatar: user?.picture || "",
-			},
+			payload: { ...currentUser[0], avatar },
 		});
 		setloading(false);
 	}, [currentUser]);
 
 	return (
 		<>
-			{loading || customLoading ? (
+			{customLoading ? (
 				<span>Loading...</span>
-			) : user ? (
+			) : currentUser[0] ? (
 				<div
 					style={{
 						display: "flex",
@@ -47,10 +48,10 @@ const Dashboard = ({ user: currentUser }: { user: UserState[] }) => {
 						<title>Welcome to StudenCuri</title>
 						<link rel="icon" href="/favicon.ico" />
 					</Head>
-					<Menu state={state || currentUser[0]} user={user} />
+					<Menu user={{ ...currentUser[0], avatar }} />
 					<Flex>
 						<Item col={12}>
-							<MainMessage name={state.name || user.nickname} />
+							<MainMessage name={currentUser[0].name} />
 						</Item>
 						<Item
 							col={6}
@@ -105,12 +106,6 @@ export const getServerSideProps = async ({
 	const prisma = new PrismaClient();
 	let userType;
 
-	if (!session.user) {
-		return {
-			props: { user: {} },
-		};
-	}
-
 	// I know this isn't how it should be done, but for the sake of speed and delivery.
 
 	try {
@@ -121,9 +116,11 @@ export const getServerSideProps = async ({
 			},
 		});
 		userType = "teacher";
+
 		return {
 			props: {
 				user: teacher,
+				avatar: session.user.picture,
 			},
 		};
 	} catch (error) {
@@ -142,6 +139,7 @@ export const getServerSideProps = async ({
 		return {
 			props: {
 				user: student,
+				avatar: session.user.picture,
 			},
 		};
 	} catch (error) {
@@ -151,7 +149,7 @@ export const getServerSideProps = async ({
 
 	if (userType !== "teacher" || userType !== "teacher") {
 		return {
-			props: { user: {} },
+			props: { user: session.user },
 		};
 	}
 };

@@ -9,6 +9,11 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^0.11.0",
+    "@devexpress/dx-react-core": "^2.7.3",
+    "@devexpress/dx-react-scheduler": "^2.7.3",
+    "@devexpress/dx-react-scheduler-material-ui": "^2.7.3",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "@prisma/client": "^2.10.0",
     "axios": "^0.21.0",
     "formik": "^2.1.4",

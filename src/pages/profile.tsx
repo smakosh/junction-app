@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
 import Error from "next/error";
 import Head from "next/head";
@@ -6,33 +6,34 @@ import Link from "next/link";
 import { PrismaClient } from "@prisma/client";
 import ProfileForm from "components/ProfileForm";
 import Layout from "components/Layout";
-import useFetchUser from "hooks/useFetchUser";
 import auth0 from "utils/auth0";
 import { useUser } from "providers/UserProvider";
 import { UserState } from "interfaces";
 
-const ProfilePage = ({ user: currentUser }: { user: UserState[] }) => {
-	const { user, loading } = useFetchUser({ required: true });
+const ProfilePage = ({
+	user: currentUser,
+}: {
+	user: UserState[] | { [key: string]: string } | null;
+}) => {
+	const [loading, setloading] = useState(true);
 	const { dispatch } = useUser();
 
 	useEffect(() => {
 		dispatch({
 			type: "SAVE_USER",
-			payload: {
-				...currentUser[0],
-				avatar: !loading && user?.picture ? user?.picture : "",
-			},
+			payload: currentUser?.[0],
 		});
+		setloading(false);
 	}, [currentUser]);
 
 	return (
-		<Layout user={user} loading={loading}>
+		<Layout user={currentUser?.[0]} loading={loading}>
 			<Head>
 				<title>Edit account</title>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			{!loading &&
-				(user ? (
+				(currentUser?.[0] ? (
 					<div
 						style={{
 							maxWidth: 960,
@@ -40,7 +41,7 @@ const ProfilePage = ({ user: currentUser }: { user: UserState[] }) => {
 							padding: "5rem 0",
 						}}
 					>
-						<ProfileForm user={user} />
+						<ProfileForm user={currentUser?.[0]} />
 						<Link href="/dashboard">
 							<a>Back to Dashboard</a>
 						</Link>
@@ -69,12 +70,6 @@ export const getServerSideProps = async ({
 		return;
 	}
 
-	if (!session.user) {
-		return {
-			props: { user: {} },
-		};
-	}
-
 	const prisma = new PrismaClient();
 	let userType;
 
@@ -88,7 +83,11 @@ export const getServerSideProps = async ({
 			},
 		});
 		userType = "teacher";
-		return { props: { user: teacher } };
+		return {
+			props: {
+				user: teacher,
+			},
+		};
 	} catch (error) {
 		console.log(error);
 		userType = "student";
@@ -102,14 +101,20 @@ export const getServerSideProps = async ({
 			},
 		});
 		userType = "student";
-		return { props: { user: student } };
+		return {
+			props: {
+				user: student,
+			},
+		};
 	} catch (error) {
 		userType = "none";
 		console.log(error);
 	}
 
 	if (userType !== "teacher" || userType !== "teacher") {
-		return { props: { user: {} } };
+		return {
+			props: { user: session.user },
+		};
 	}
 };
 
