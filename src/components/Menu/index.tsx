@@ -23,11 +23,11 @@ const Menu = ({ user }: { user: UserState }) => (
 		</ul>
 		<MenuFooter>
 			<a href="/api/auth/logout">
-				<FiLogOut width={30}></FiLogOut>
+				<FiSettings width={30} />
 				Settings
 			</a>
 			<a href="/api/auth/logout">
-				<FiSettings width={30}></FiSettings> Log Out
+				<FiLogOut width={30} /> Log Out
 			</a>
 		</MenuFooter>
 	</Container>
