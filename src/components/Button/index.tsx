@@ -1,4 +1,4 @@
-import React, { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react';
+import React, { AnchorHTMLAttributes } from 'react';
 
 import { Container } from './styles';
 
