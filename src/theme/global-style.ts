@@ -16,7 +16,7 @@ export default createGlobalStyle`
 
   body {
     margin: 0;
-    background: #f3f3f5;
+    background: #E5E5E5;
 		color: #000;
     height: 100%;
     font-family: "Inter", sans-serif;
