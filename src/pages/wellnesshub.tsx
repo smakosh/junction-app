@@ -8,7 +8,7 @@ import HeaderUser from "components/HeaderUser";
 import DonutHealthy from "components/DonutHealthy";
 import AddDonutHealthy from "components/DonutHealthy/addNew";
 import LineChart from "components/LineChart";
-import FeelingTracker from "components/FeelingTracker";
+import BlockMessage from "components/BlockMessage";
 import Menu from "components/Menu";
 import React from "react";
 import { Flex, Item } from "react-flex-ready";
@@ -49,7 +49,9 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 					<Flex>
 						<Item col={12}>
 							<HeaderUser />
+							Healthy habits
 						</Item>
+
 						<Item
 							col={8}
 							colTablet={6}
@@ -94,6 +96,25 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 								>
 									<AddDonutHealthy></AddDonutHealthy>
 								</Item>
+								<Item
+									col={12}
+									colTablet={12}
+									colMobile={12}
+									gap={2}
+									style={{ alignSelf: "flex-start" }}
+								>
+									<BlockMessage background={true} texts={["Wellness tips of the week", "When looking at the results of your mood tracker, reflect back on the days when you were doing really well.", "What made you feel that way?", "Include those things in your routine more often."]} />
+
+								</Item>
+								<Item
+									col={12}
+									colTablet={12}
+									colMobile={12}
+									gap={2}
+									style={{ alignSelf: "flex-start" }}
+								>
+									<BlockMessage background={false} texts={["Connect your Oura ring for more detailed data", "The Oura ring or other fitness trackers can help you track your sleep and activity in more detail here."]} />
+								</Item>
 							</Flex>
 						</Item>
 						<Item
@@ -105,6 +126,7 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 						>
 							<LineChart />
 						</Item>
+
 					</Flex>
 
 
