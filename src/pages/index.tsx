@@ -5,6 +5,8 @@ import { CurriculumGetPayload, PrismaClient } from "@prisma/client";
 import Head from "next/head";
 import useFetchUser from "hooks/useFetchUser";
 import Layout from "components/Layout";
+import Button from "components/Button";
+import { Flex, Item } from "react-flex-ready";
 
 const Curriculums = ({
 	curriculums,
@@ -23,7 +25,7 @@ const Curriculums = ({
 	return (
 		<Layout user={user} loading={loading}>
 			<Head>
-				<title>Welcome to StudenCuri</title>
+				<title>Welcome to LearnHub</title>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<div
@@ -58,9 +60,19 @@ const Curriculums = ({
 						</ul>
 					))
 				) : (
-					<h2>No curriculums at the moment.</h2>
-				)}
-				<a href="/api/auth/login">Sign up</a>
+						<>
+							<h2>Welcome to LearnHub!</h2>
+							<p>Just you know what feels like to be studying on 21st century. We get that! It's time to improve your well-being!</p>
+						</>
+					)}
+				<Flex>
+					<Item col={6} colTablet={6} colMobile={12} gap={1}>
+						<Button href="/api/auth/login">Sign Up</Button>
+					</Item>
+					<Item col={6} colTablet={6} colMobile={12} gap={1}>
+						<Button href="/api/auth/login">Sign In</Button>
+					</Item>
+				</Flex>
 			</div>
 		</Layout>
 	);

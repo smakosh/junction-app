@@ -7,6 +7,9 @@ const Header: React.FC<{
 	<div
 		style={{
 			background: "#000",
+			position: 'absolute',
+			top: 0,
+			width: '100%',
 			color: "#fff",
 			padding: "1.5rem 0",
 		}}
@@ -21,14 +24,14 @@ const Header: React.FC<{
 			}}
 		>
 			<Link href="/">
-				<a>StudenCuri</a>
+				<a>LearnHub</a>
 			</Link>
 			{!loading &&
 				(user ? (
 					<a href="/api/auth/logout">Logout</a>
 				) : (
-					<a href="/api/auth/login">Login</a>
-				))}
+						<a href="/api/auth/login">Login</a>
+					))}
 		</div>
 		<style jsx>{`
 			a {
