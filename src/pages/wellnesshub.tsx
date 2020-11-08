@@ -6,6 +6,8 @@ import Head from "next/head";
 import useFetchUser from "hooks/useFetchUser";
 import HeaderUser from "components/HeaderUser";
 import DonutHealthy from "components/DonutHealthy";
+import AddDonutHealthy from "components/DonutHealthy/addNew";
+import LineChart from "components/LineChart";
 import FeelingTracker from "components/FeelingTracker";
 import Menu from "components/Menu";
 import React from "react";
@@ -63,7 +65,7 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 									gap={2}
 									style={{ alignSelf: "flex-start" }}
 								>
-									<DonutHealthy />
+									<DonutHealthy title="Walking" goal={80} measure="steps" />
 								</Item>
 								<Item
 									col={3}
@@ -72,7 +74,7 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 									gap={2}
 									style={{ alignSelf: "flex-start" }}
 								>
-									<DonutHealthy />
+									<DonutHealthy title="Drinking water" goal={100} measure="litters" />
 								</Item>
 								<Item
 									col={3}
@@ -81,7 +83,7 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 									gap={2}
 									style={{ alignSelf: "flex-start" }}
 								>
-									<DonutHealthy />
+									<DonutHealthy title="Meditation" goal={60} measure="hours" />
 								</Item>
 								<Item
 									col={3}
@@ -90,7 +92,7 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 									gap={2}
 									style={{ alignSelf: "flex-start" }}
 								>
-									<DonutHealthy />
+									<AddDonutHealthy></AddDonutHealthy>
 								</Item>
 							</Flex>
 						</Item>
@@ -101,7 +103,7 @@ const Wellnesshub = ({ user: currentUser }: { user: UserState[] }) => {
 							gap={2}
 							style={{ alignSelf: "flex-start" }}
 						>
-							<FeelingTracker />
+							<LineChart />
 						</Item>
 					</Flex>
 
