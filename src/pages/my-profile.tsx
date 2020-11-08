@@ -7,7 +7,6 @@ import MainMessage from "components/MainMessage";
 import Habits from "components/Habits";
 import FeelingTracker from "components/FeelingTracker";
 import Projects from "components/Projects";
-import Schedule from "components/Schedule";
 import Menu from "components/Menu";
 import React from "react";
 import { Flex, Item } from "react-flex-ready";
