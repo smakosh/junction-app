@@ -11,16 +11,13 @@ export interface CurriculumProps {
 export interface ProfileProps {
 	user: {
 		[key: string]: string;
-	}
+	};
 }
 
 export type UserState = {
 	id?: string;
-	name: string;
+	name?: string;
 	avatar: string;
-}
-
-export interface ActionTypes {
-  type: string;
-  payload?: UserState;
-}
+	nickname?: string;
+	email?: string;
+};

@@ -1,5 +1,5 @@
 import Header from "components/Header";
-import { Container } from "./styles";
+import { Container, Loading } from "./styles";
 
 const Layout: React.FC<{
 	user: { [key: string]: string } | null;
@@ -7,7 +7,13 @@ const Layout: React.FC<{
 }> = ({ user, loading, children }) => (
 	<Container>
 		<Header user={user} loading={loading} />
-		{loading ? <span>Loading...</span> : children}
+		{loading ? (
+			<Loading>
+				<span>Loading...</span>
+			</Loading>
+		) : (
+			children
+		)}
 	</Container>
 );
 

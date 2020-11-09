@@ -1,8 +1,7 @@
 import auth0 from "utils/auth0";
-import { useEffect, useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
+import { useRouter } from "next/router";
 import { Flex, Item } from "react-flex-ready";
-import Error from "next/error";
 import { PrismaClient } from "@prisma/client";
 import Head from "next/head";
 import HeaderUser from "components/HeaderUser";
@@ -11,32 +10,22 @@ import AddDonutHealthy from "components/DonutHealthy/addNew";
 import LineChart from "components/LineChart";
 import BlockMessage from "components/BlockMessage";
 import Menu from "components/Menu";
-import { useUser } from "providers/UserProvider";
 import { UserState } from "interfaces";
 
 const Wellnesshub = ({
-	user: currentUser,
+	user,
 	avatar,
 }: {
 	user: UserState[];
 	avatar: string;
 }) => {
-	const [loading, setloading] = useState(true);
-	const { dispatch } = useUser();
-
-	useEffect(() => {
-		dispatch({
-			type: "SAVE_USER",
-			payload: { ...currentUser[0], avatar },
-		});
-		setloading(false);
-	}, [currentUser]);
+	const router = useRouter();
 
 	return (
 		<>
-			{loading ? (
+			{!user[0] ? (
 				<span>Loading...</span>
-			) : currentUser[0] ? (
+			) : user[0] ? (
 				<div
 					style={{
 						display: "flex",
@@ -47,7 +36,7 @@ const Wellnesshub = ({
 						<title>Welcome to StudenCuri</title>
 						<link rel="icon" href="/favicon.ico" />
 					</Head>
-					<Menu title="Wellness Hub" user={{ ...currentUser[0], avatar }} />
+					<Menu title="Wellness Hub" user={{ ...user[0], avatar }} />
 					<Flex>
 						<Item col={12}>
 							<HeaderUser />
@@ -148,7 +137,7 @@ const Wellnesshub = ({
 					</Flex>
 				</div>
 			) : (
-				<Error statusCode={404} />
+				router.push("/dashboard")
 			)}
 		</>
 	);

@@ -1,76 +1,65 @@
 import auth0 from "utils/auth0";
-import { useEffect, useState } from "react";
 import { NextApiRequest, NextApiResponse } from "next";
+import Link from "next/link";
 import { PrismaClient } from "@prisma/client";
+import { Flex, Item } from "react-flex-ready";
 import Head from "next/head";
+import Button from "components/Button";
+import { motion } from "framer-motion";
 import MainMessage from "components/MainMessage";
 import Habits from "components/Habits";
 import FeelingTracker from "components/FeelingTracker";
 import Projects from "components/Projects";
 import Schedule from "components/Schedule";
 import Menu from "components/Menu";
-import React from "react";
-import { Flex, Item } from "react-flex-ready";
-import Error from "next/error";
-import { useUser } from "providers/UserProvider";
 import { UserState } from "interfaces";
-import { motion } from "framer-motion";
 
 const Dashboard = ({
-	user: currentUser,
+	user,
 	avatar,
 }: {
-	user: UserState[];
+	user: UserState[] | UserState;
 	avatar: string;
 }) => {
-	const [loading, setloading] = useState(true);
-	const { dispatch } = useUser();
-
-	useEffect(() => {
-		dispatch({
-			type: "SAVE_USER",
-			payload: { ...currentUser[0], avatar },
-		});
-		setloading(false);
-	}, [currentUser]);
+	if (typeof window === "undefined") {
+		return null;
+	}
 
 	return (
-		<>
-			{loading ? (
-				<span>Loading...</span>
-			) : currentUser[0] ? (
-				<motion.div
-					initial="initial"
-					animate="enter"
-					exit="exit"
-					variants={{
-						initial: { scale: 0.96, y: 30, opacity: 0 },
-						enter: {
-							scale: 1,
-							y: 0,
-							opacity: 1,
-							transition: { duration: 0.5, ease: [0.48, 0.15, 0.25, 0.96] },
-						},
-						exit: {
-							scale: 0.6,
-							y: 100,
-							opacity: 0,
-							transition: { duration: 0.2, ease: [0.48, 0.15, 0.25, 0.96] },
-						},
-					}}
-					style={{
-						display: "flex",
-						alignItems: "start",
-					}}
-				>
+		<motion.div
+			initial="initial"
+			animate="enter"
+			exit="exit"
+			variants={{
+				initial: { scale: 0.96, y: 30, opacity: 0 },
+				enter: {
+					scale: 1,
+					y: 0,
+					opacity: 1,
+					transition: { duration: 0.5, ease: [0.48, 0.15, 0.25, 0.96] },
+				},
+				exit: {
+					scale: 0.6,
+					y: 100,
+					opacity: 0,
+					transition: { duration: 0.2, ease: [0.48, 0.15, 0.25, 0.96] },
+				},
+			}}
+			style={{
+				display: "flex",
+				alignItems: "start",
+			}}
+		>
+			{user[0]?.name ? (
+				<>
 					<Head>
 						<title>Welcome to StudenCuri</title>
 						<link rel="icon" href="/favicon.ico" />
 					</Head>
-					<Menu title="Dashboard" user={{ ...currentUser[0], avatar }} />
+					<Menu title="Dashboard" user={{ ...user[0], avatar }} />
 					<Flex>
 						<Item col={12}>
-							<MainMessage name={currentUser[0].name} />
+							<MainMessage name={user[0].name} />
 						</Item>
 						<Item
 							col={6}
@@ -97,11 +86,28 @@ const Dashboard = ({
 							<Schedule />
 						</Item>
 					</Flex>
-				</motion.div>
+				</>
 			) : (
-				<Error statusCode={404} />
+				<div
+					style={{
+						justifyContent: "center",
+						display: "flex",
+						width: "100%",
+						textAlign: "center",
+						alignSelf: "center",
+						height: "100vh",
+					}}
+				>
+					<Link href="/profile">
+						<Button
+							style={{ alignSelf: "center", width: "40%", margin: "0 auto" }}
+						>
+							Setup your profile
+						</Button>
+					</Link>
+				</div>
 			)}
-		</>
+		</motion.div>
 	);
 };
 

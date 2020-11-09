@@ -1,6 +1,6 @@
 import { Container } from "./styles";
 
-const MainMessage = ({ name }: { name: string }) => (
+const MainMessage = ({ name }: { name?: string }) => (
 	<Container>
 		<div>
 			<h1>Good morning, {name}!</h1>

@@ -3,7 +3,6 @@ import Router from "next/router";
 import NProgress from "nprogress";
 import GlobalStyle from "theme/global-style";
 import "nprogress/nprogress.css";
-import UserProvider from "providers/UserProvider";
 import { AnimatePresence, motion } from "framer-motion";
 // import { ThemeProvider } from "styled-components";
 // import theme from "theme/config";
@@ -17,25 +16,23 @@ Router.events.on("routeChangeError", () => NProgress.done());
 const MyApp = ({ Component, pageProps, router }: AppProps) => (
 	<>
 		<GlobalStyle />
-		<UserProvider>
-			<AnimatePresence exitBeforeEnter>
-				<motion.div
-					key={router.route}
-					initial="pageInitial"
-					animate="pageAnimate"
-					variants={{
-						pageInitial: {
-							opacity: 0,
-						},
-						pageAnimate: {
-							opacity: 1,
-						},
-					}}
-				>
-					<Component {...pageProps} key={router.route} />
-				</motion.div>
-			</AnimatePresence>
-		</UserProvider>
+		<AnimatePresence exitBeforeEnter>
+			<motion.div
+				key={router.route}
+				initial="pageInitial"
+				animate="pageAnimate"
+				variants={{
+					pageInitial: {
+						opacity: 0,
+					},
+					pageAnimate: {
+						opacity: 1,
+					},
+				}}
+			>
+				<Component {...pageProps} key={router.route} />
+			</motion.div>
+		</AnimatePresence>
 	</>
 );
 

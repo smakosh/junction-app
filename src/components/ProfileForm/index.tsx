@@ -1,22 +1,11 @@
-import { useEffect } from "react";
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { ProfileProps } from "interfaces";
-import { useUser } from "providers/UserProvider";
 import { useRouter } from "next/router";
 
 const ProfileForm = ({ user }: ProfileProps) => {
-	const { dispatch } = useUser();
 	const router = useRouter();
-
-	useEffect(() => {
-		if (user?.name) {
-			router.push("/dashboard");
-		}
-	}, [user]);
-
-	console.log(user);
 
 	return (
 		<Formik
@@ -30,13 +19,13 @@ const ProfileForm = ({ user }: ProfileProps) => {
 			})}
 			onSubmit={async ({ name, type }, { setSubmitting }) => {
 				try {
-					const { data } = await axios.post("/api/account", {
+					await axios.post("/api/account", {
 						id: user.sub,
 						name,
 						type,
 						email: user.name,
 					});
-					dispatch({ type: "SAVE_USER", payload: data });
+					router.push("/dashboard");
 				} catch (err) {
 					alert(err.message);
 					setSubmitting(false);
