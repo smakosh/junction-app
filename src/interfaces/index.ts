@@ -9,9 +9,7 @@ export interface CurriculumProps {
 }
 
 export interface ProfileProps {
-	user: {
-		[key: string]: string;
-	};
+	user: UserState[] | UserState;
 }
 
 export type UserState = {

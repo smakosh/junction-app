@@ -1,10 +1,13 @@
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { ProfileProps } from "interfaces";
 import { useRouter } from "next/router";
 
-const ProfileForm = ({ user }: ProfileProps) => {
+const ProfileForm = ({
+	user,
+}: {
+	user: { name: string; nickname: string; sub: string };
+}) => {
 	const router = useRouter();
 
 	return (

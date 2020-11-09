@@ -6,9 +6,12 @@ import { PrismaClient } from "@prisma/client";
 import ProfileForm from "components/ProfileForm";
 import Layout from "components/Layout";
 import auth0 from "utils/auth0";
-import { UserState } from "interfaces";
 
-const ProfilePage = ({ user }: { user: UserState[] | UserState }) => {
+const ProfilePage = ({
+	user,
+}: {
+	user: { name: string; nickname: string; sub: string };
+}) => {
 	const router = useRouter();
 
 	return (
@@ -59,41 +62,41 @@ export const getServerSideProps = async ({
 
 	// I know this isn't how it should be done, but for the sake of speed and delivery.
 
-	// try {
-	// 	const teacher = await prisma.teacher.findMany({
-	// 		where: {
-	// 			email: session.user.email,
-	// 			userId: session.user.id,
-	// 		},
-	// 	});
-	// 	userType = "teacher";
-	// 	return {
-	// 		props: {
-	// 			user: teacher,
-	// 		},
-	// 	};
-	// } catch (error) {
-	// 	console.log(error);
-	// 	userType = "student";
-	// }
+	try {
+		const teacher = await prisma.teacher.findMany({
+			where: {
+				email: session.user.email,
+				userId: session.user.id,
+			},
+		});
+		userType = "teacher";
+		return {
+			props: {
+				user: teacher,
+			},
+		};
+	} catch (error) {
+		console.log(error);
+		userType = "student";
+	}
 
-	// try {
-	// 	const student = await prisma.teacher.findMany({
-	// 		where: {
-	// 			email: session.user.email,
-	// 			userId: session.user.id,
-	// 		},
-	// 	});
-	// 	userType = "student";
-	// 	return {
-	// 		props: {
-	// 			user: student,
-	// 		},
-	// 	};
-	// } catch (error) {
-	// 	userType = "none";
-	// 	console.log(error);
-	// }
+	try {
+		const student = await prisma.teacher.findMany({
+			where: {
+				email: session.user.email,
+				userId: session.user.id,
+			},
+		});
+		userType = "student";
+		return {
+			props: {
+				user: student,
+			},
+		};
+	} catch (error) {
+		userType = "none";
+		console.log(error);
+	}
 
 	if (userType !== "teacher" || userType !== "teacher") {
 		return {
